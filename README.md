@@ -29,6 +29,9 @@ A pipelined MIPS-like architecture processor written in Verilog for the Altera D
 * Implementation Details
 	
 	The ECE 350 processor integrates stalling, flush logic and full bypassing to avoid hazards while maintain high performance. Since the pipeline is issuing in-order, only RAW data hazards need to be considered. 
+	
 	 When a load instruction is followed immediately by an instruction that depends on the load (except when the dependent instruction is a store that needs the value from the load), the processor stalls for a cycle. When stalling, PC register and instruction register between fetch and decode is set to not-writable. A noop is inserted into the execute stage.
+	 
     When there is a multdiv operation, the processor stalls until the dataRDY flag in the MultDiv unit is one. During multdiv stalls, the X/M registers hold their values so that the result could be written once the multdiv finish computing.
+    
     The ECE 350 processor implements full bypassing: WX, MX and WM. The general logic is: whenever an instruction in Writeback or Memory writes to a register that instructions in Execute or Memory need, this data is bypassed. This logic is implemented using combinational circuits and MX, WX bypassed data is selected using multiplexers in Execute stage.
